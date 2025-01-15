@@ -1,0 +1,72 @@
+{% block sidebar %}
+<aside id="sidebar" class="sidebar-expanded transition-all duration-300 p-4 border-r border-gray-300 shadow-md z-100">
+    <div class="space-y-8">
+        <div class="flex items-center gap-2">
+            <button onclick="toggleSidebar()" class="p-2 hover:bg-gray-200 rounded-full active:scale-95 duration-100" title="Click to expand or collapse">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M4 18q-.425 0-.712-.288T3 17t.288-.712T4 16h16q.425 0 .713.288T21 17t-.288.713T20 18zm0-5q-.425 0-.712-.288T3 12t.288-.712T4 11h16q.425 0 .713.288T21 12t-.288.713T20 13zm0-5q-.425 0-.712-.288T3 7t.288-.712T4 6h16q.425 0 .713.288T21 7t-.288.713T20 8z"/></svg>
+            </button>
+            <h2 class="font-bold">Users</h2>
+        </div>
+
+        {% if users %}
+            <div id="users-container" class="overflow-y-auto overflow-x-hidden divide-y group">            
+                {% for user in users %}
+                    <a id="user-{{ user.username }}" href="{% if receiver and receiver.username == user.username %}#{% else %}/chat?user={{ user.username }}{% endif %}" class="user-sidebar-card {% if receiver and receiver.username == user.username %}active{% endif %} group-[.collapsed]:px-1 group-[.collapsed]:justify-center">
+                        <div class="flex gap-2 group-[.collapsed]:gap-0 items-center">
+                            <img class="w-[32px]" src="https://api.dicebear.com/9.x/initials/svg?seed={{ user.first_name }}&size=32&radius=50" alt="{{ user.first_name }} Avatar" />
+                            <div class="flex flex-col justify-center gap-1">
+                                <span class="group-[.collapsed]:hidden">{{ user.first_name }} {{ user.last_name }}</span>
+                                <div class="user-online hidden text-xs text-green-700 flex gap-1 items-center">
+                                    <div class="user-online w-1 h-1 bg-green-700 rounded-full">
+                                    </div>
+                                    <span class="group-[.collapsed]:hidden">Online</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="new-message-indicator hidden bg-blue-600 rounded-full w-2 h-2 text-white font-medium text-xs {% if receiver and receiver.username == user.username %}hidden{% endif %}">
+                        </div>
+                    </a>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+</aside>
+{% endblock %}
+
+{% block scripts %}
+    <script type="text/javascript">
+        function collapseSidebar() {
+            const sidebar = document.querySelector('#sidebar');
+            const usersH2 = sidebar.querySelector('h2');
+            const usersContainer = document.querySelector('#users-container');
+
+            sidebar.classList.remove('sidebar-expanded');
+            sidebar.classList.add('sidebar-collapsed');
+            usersH2.classList.add('hidden');
+            if(usersContainer) usersContainer.classList.add('collapsed');
+        }
+
+        function expandSidebar() {
+            const sidebar = document.querySelector('#sidebar');
+            const usersH2 = sidebar.querySelector('h2');
+            const usersContainer = document.querySelector('#users-container');
+
+            sidebar.classList.remove('sidebar-collapsed');
+            sidebar.classList.add('sidebar-expanded');
+            usersH2.classList.remove('hidden');
+            if(usersContainer) usersContainer.classList.remove('collapsed');
+        }
+
+        function toggleSidebar() {
+            const sidebar = document.querySelector('#sidebar');
+
+            const isExpanded = sidebar.classList.contains('sidebar-expanded');
+            if(isExpanded) {
+                collapseSidebar();
+            } else {
+                expandSidebar();
+            }        
+        }
+    </script>
+{% endblock %}

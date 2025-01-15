@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block title %}Login - Chat Application{% endblock %}
+
+{% block content %}
+    <div class="w-full h-full flex items-center justify-center p-4">
+        <div class="min-w-72">
+            <div class="mb-8">
+                <h1 class="font-bold text-3xl">Welcome Back</h1>
+                <p class="text-gray-400 text-sm">Please enter your credentials to continue</p>
+            </div>
+            <form class="flex flex-col gap-4" method="post">
+                {% csrf_token %}
+                <div class="flex flex-col gap-1">
+                    <label for="username">Username</label>
+                    <input class="input-element" type="text" id="username" name="username" required />
+                </div>
+                <div class="flex flex-col gap-1">
+                    <label for="password">Password</label>
+                    <input class="input-element" type="password" id="password" name="password" required />
+                </div>
+                <button class="btn-primary" type="submit">Login</button>
+            </form>
+
+            {% if error %}
+                <ul class="error-messages mt-4">
+                    <li>{{ error }}</li>
+                </ul>
+            {% endif %}
+
+            <div class="mt-6">
+                <p>Don't have an account? <a class="link" href="/register">Register</a></p>
+            </div>
+        </div>
+    </div>
+{% endblock %}

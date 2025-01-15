@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+{% block title %}Login - Chat Application{% endblock %}
+
+{% block content %}
+    <div class="w-full h-full flex items-center justify-center p-4">
+        <div class="min-w-72">
+            <div class="mb-8">
+                <h1 class="font-bold text-3xl">Sign Up</h1>
+                <p class="text-gray-400 text-sm">Create a new account</p>
+            </div>
+            <form class="flex flex-col gap-4" method="post">
+                {% csrf_token %}
+
+                {% if form.non_field_errors %}
+                    <div class="error-messages">
+                        <ul class="list-disc">
+                            {% for error in form.non_field_errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+
+                <div class="form-row">
+                    <div class="flex flex-col gap-1 flex-1">
+                        <label for="first_name">First Name</label>
+                        <input class="input-element" type="text" id="first_name" name="first_name" required />
+                        {% if form.first_name.errors %}
+                            <ul class="error-messages">
+                                {% for error in form.first_name.errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </div>
+                    <div class="flex flex-col gap-1 flex-1">
+                        <label for="first_name">Last Name</label>
+                        <input class="input-element" type="text" id="last_name" name="last_name" required />
+                        {% if form.last_name.errors %}
+                            <ul class="error-messages">
+                                {% for error in form.last_name.errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="flex flex-col gap-1">
+                    <label for="username">Username</label>
+                    <input class="input-element" type="text" id="username" name="username" required />
+                    {% if form.username.errors %}
+                        <ul class="error-messages">
+                            {% for error in form.username.errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </div>
+                <div>
+                    <div class="form-row">
+                        <div class="flex flex-col gap-1 flex-1">
+                            <label for="password">Password</label>
+                            <input class="input-element" type="password" id="password" name="password1" required />
+                            
+                        </div>
+                        <div class="flex flex-col gap-1 flex-1">
+                            <label for="confirm-password">Confirm Password</label>
+                            <input class="input-element" type="password" id="confirm-password" name="password2" required />
+                        </div>
+                    </div>
+                    {% if form.password1.errors or form.password2.errors %}
+                        <ul class="error-messages mt-2">
+                            {% for error in form.password1.errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                            {% for error in form.password2.errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </div>
+                <button class="btn-primary" type="submit">Register</button>
+            </form>
+            <div class="mt-8">
+                <p>Already have an account? <a class="link" href="/login">Login</a></p>
+            </div>
+        </div>
+    </div>
+{% endblock %}

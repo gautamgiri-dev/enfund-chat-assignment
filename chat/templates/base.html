@@ -1,0 +1,210 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Enfund Assignment - Gautam{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            transition: transform 0.3s ease;
+            font-family: Inter, sans-serif;
+        }
+    </style>
+
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .input-element {
+                @apply p-2 rounded-md border border-gray-300/60 bg-gray-200/50 focus:bg-white outline-none duration-100 focus:ring-blue-400 focus:ring-2
+            }
+
+            .btn {
+                @apply px-4 py-2 rounded-md duration-100
+            }
+
+            .btn-primary {
+                @apply btn bg-blue-600 text-white hover:bg-blue-700
+            }
+
+            .btn-secondary {
+                @apply btn border border-blue-600 hover:bg-blue-600 hover:text-white
+            }
+
+            .btn-danger {
+                @apply btn bg-red-600 text-white hover:bg-red-700
+            }
+
+            .link {
+                @apply text-blue-600
+            }
+
+            .sidebar-collapsed {
+                @apply w-[70px]
+            }
+
+            .sidebar-expanded {
+                @apply w-1/5
+            }
+
+            .user-sidebar-card {
+                @apply flex justify-between items-center py-2 hover:bg-gray-100 px-4 rounded-md
+            }
+
+            .user-sidebar-card.active {
+                @apply bg-gray-200
+            }
+
+            .form-row {
+                @apply flex justify-between flex-col md:flex-row gap-2 md:gap-4
+            }
+
+            .error-messages {
+                @apply text-xs text-red-600 text-wrap space-y-1
+            }
+
+            .scrollbar::-webkit-scrollbar {
+                @apply w-1
+            }
+
+            .scrollbar::-webkit-scrollbar-thumb {
+                @apply rounded-full bg-gray-200
+            }
+
+            .scrollbar::-webkit-scrollbar-thumb:hover {
+                @apply bg-gray-400
+            }
+
+            .received-message {
+                @apply flex gap-1 items-start min-w-[60px] w-full
+            }
+
+            .sent-message {
+                @apply flex gap-1 items-start justify-end min-w-[60px] w-full
+            }
+
+            .date-container {
+                @apply text-center text-sm font-medium text-gray-400
+            }
+
+            .unread-message {
+                @apply bg-yellow-50
+            }
+        }
+    </style>
+    {% block style %}
+    {% endblock %}
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navbar -->
+    <div class="fixed top-0 w-full shadow-md p-4 z-50 border-b bg-white">
+        <nav class="max-w-7xl flex justify-between items-center mx-auto">
+            <a href="/" class="text-center text-blue-600 text-lg font-medium hover:text-blue-500">Chat Application</a>
+            <menu class="flex gap-4 items-center">
+                {% if not user.is_authenticated %}
+                    <li><a class="btn-primary" href='/login'>Login</a></li>
+                    <li><a class="btn-secondary" href='/register'>Register</a></li>
+                {% else %}
+                    <li><a class="btn-danger" href='/logout'>Logout</a></li>
+                {% endif %}
+            </menu>
+        </nav>
+    </div>
+
+    <!-- Main Content Wrapper -->
+    <div class="flex flex-grow mt-16 h-full">
+        <!-- Left Menu -->
+        {% include 'components/sidebar.html' %}
+
+        <!-- Main Content -->
+        <main class="flex-1">
+            <!-- This area will be dynamically replaced with content -->
+            <!-- {% if messages %}
+                <ul class="messages">
+                    {% for message in messages %}
+                    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %} -->
+            {% block content %}{% endblock %}
+        </main>
+
+        <!-- Right Panel (Optional for Chat App) -->
+        <aside id="right-panel" class="w-1/5 bg-gray-100 p-4 border-l border-gray-300">
+            <h2 class="font-bold mb-4">Right Panel</h2>
+            <p>Use this area for additional information or quick links.</p>
+        </aside>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-blue-200 text-center py-4">
+        <p>&copy; 2025 Gautam | Enfund Assignment</p>
+    </footer>
+
+    <script src="{% static 'js/base.js' %}"></script>
+    {% if user.is_authenticated %}
+        <script type="text/javascript">
+            const chatSocket = new WebSocket(
+                'ws://' + window.location.host + '/ws/chat/'
+            );
+
+            const roomName = "{{ receiver.username }}";
+            const currentUser = "{{ request.user.username }}";
+            
+
+            chatSocket.onmessage = function(e) {
+                const event = JSON.parse(e.data);
+                if(event.type == 'user_connected') {
+                    setUserStatus(event.username, true);
+                }else if(event.type == 'user_disconnected') {
+                    setUserStatus(event.username, false);
+                }else if(event.type == 'user_status') {
+                    setUserStatus(event.username, event.status === 'online');
+                }else if(event.type == 'chat_message') {
+                    {% if receiver %}
+                        addReceivedMessage(event.message, {
+                            first_name: "{{ receiver.first_name }}",
+                            last_name: "{{ receiver.last_name }}",
+                            username: event.from
+                       }, new Date(), event.from === "{{ receiver.username }}");
+                    {% else %}
+                        const msgIndicator = document.querySelector(`#users-container #user-${event.from} .new-message-indicator`);
+                        document.querySelector(`#user-${event.from}`).classList.add('unread-message');
+                        msgIndicator.classList.remove('hidden');
+                    {% endif %}
+                    const audio = new Audio('{% static "audio/notify.mp3" %}');
+                    audio.play();
+                }else if(event.type == 'online_users') {
+                    event.users.forEach(user => {
+                        setUserStatus(user, true);
+                    });
+                }
+
+                scrollChatAreaToBottom();
+            };
+
+            chatSocket.onclose = function(e) {
+                console.error('Chat socket closed unexpectedly');
+            };
+
+            function setUserStatus(username, isOnline) {
+                const userElement = document.querySelector(`#user-${username}`);
+                if (userElement) {
+                    const statusElement = userElement.querySelector('.user-online');
+                    if (isOnline) {
+                        statusElement.classList.remove('hidden');
+                    } else {
+                        statusElement.classList.add('hidden');
+                    }
+                }
+            }
+        </script>
+    {% endif %}
+    {% block scripts %}
+    {% endblock %}
+</body>
+</html>

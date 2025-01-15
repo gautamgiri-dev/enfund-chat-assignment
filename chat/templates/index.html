@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}Home - Enfund Assignment{% endblock %}
+
+{% block content %}
+    <div class="p-4">
+        {% if user.is_authenticated %}
+        <div>
+            <p class="text-3xl font-medium">Welcome, {{ user.first_name }} {{ user.last_name }}!</p>
+            <span class="text-sm text-gray-500">Click on a user on the left panel to start chatting</span>
+        </div>
+        {% else %}
+            <p>
+                Hi! Welcome to Chat Application. Please <a class="link" href="/login">login</a> or <a class="link" href="/register">register</a> to chat to people.
+            </p>
+        {% endif %}
+    </div>
+{% endblock %}
