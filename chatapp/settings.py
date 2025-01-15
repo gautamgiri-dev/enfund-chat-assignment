@@ -25,7 +25,17 @@ SECRET_KEY = 'django-insecure-&hs2dfftsf-22txx&9n)%-^)ite9*dj0)h$-b6*r9j@+5q_ce3
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = [
+    "localhost",
+    "127.0.0.1",
+    "enfund-chat-app.onrender.com",
+    "chat.gautamgiri.dev"
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://enfund-chat-app.onrender.com",
+    "https://chat.gautamgiri.dev",
+]
 
 
 # Application definition
