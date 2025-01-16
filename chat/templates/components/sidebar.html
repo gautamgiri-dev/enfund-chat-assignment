@@ -1,5 +1,5 @@
 {% block sidebar %}
-<aside id="sidebar" class="sidebar-expanded transition-all duration-300 p-4 border-r border-gray-300 shadow-md z-100">
+<aside id="sidebar" class="sidebar-expanded transition-all duration-300 ease-out p-4 border-r border-gray-300 shadow-md z-[100] absolute h-full bg-white">
     <div class="space-y-8">
         <div class="flex items-center gap-2">
             <button onclick="toggleSidebar()" class="p-2 hover:bg-gray-200 rounded-full active:scale-95 duration-100" title="Click to expand or collapse">
@@ -32,41 +32,4 @@
         {% endif %}
     </div>
 </aside>
-{% endblock %}
-
-{% block scripts %}
-    <script type="text/javascript">
-        function collapseSidebar() {
-            const sidebar = document.querySelector('#sidebar');
-            const usersH2 = sidebar.querySelector('h2');
-            const usersContainer = document.querySelector('#users-container');
-
-            sidebar.classList.remove('sidebar-expanded');
-            sidebar.classList.add('sidebar-collapsed');
-            usersH2.classList.add('hidden');
-            if(usersContainer) usersContainer.classList.add('collapsed');
-        }
-
-        function expandSidebar() {
-            const sidebar = document.querySelector('#sidebar');
-            const usersH2 = sidebar.querySelector('h2');
-            const usersContainer = document.querySelector('#users-container');
-
-            sidebar.classList.remove('sidebar-collapsed');
-            sidebar.classList.add('sidebar-expanded');
-            usersH2.classList.remove('hidden');
-            if(usersContainer) usersContainer.classList.remove('collapsed');
-        }
-
-        function toggleSidebar() {
-            const sidebar = document.querySelector('#sidebar');
-
-            const isExpanded = sidebar.classList.contains('sidebar-expanded');
-            if(isExpanded) {
-                collapseSidebar();
-            } else {
-                expandSidebar();
-            }        
-        }
-    </script>
 {% endblock %}
