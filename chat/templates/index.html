@@ -5,7 +5,7 @@
 {% block content %}
     <div class="p-4">
         {% if user.is_authenticated %}
-        <div>
+        <div class="text-balance">
             <p class="text-3xl font-medium">Welcome, {{ user.first_name }} {{ user.last_name }}!</p>
             <span class="text-sm text-gray-500">Click on a user on the left panel to start chatting</span>
         </div>
