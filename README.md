@@ -104,14 +104,17 @@ Follow these steps to set up and run the application locally:
 
 ## Screenshots
 
-### Login Page
-![Login Page](https://via.placeholder.com/800x400?text=Login+Page)
+### Login Page (Desktop)
+![Login Page](screenshots/LoginPage%20-%20Desktop.png)
 
-### Chat Interface
-![Chat Interface](https://via.placeholder.com/800x400?text=Chat+Interface)
+### Login Page (Mobile)
+![Login Page](screenshots/LoginPage%20-%20Mobile.png)
+
+### Chat Interface (Desktop)
+![Chat Interface](screenshots/ChatInterface%20-%20Desktop.png)
 
 ### Chat Interface (Mobile)
-![Chat Interface](https://via.placeholder.com/800x400?text=Chat+Interface)
+![Chat Interface](screenshots/ChatInterface%20-%20Mobile.png)
 
 ---
 

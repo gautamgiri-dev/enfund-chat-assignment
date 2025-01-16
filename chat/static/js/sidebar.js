@@ -8,8 +8,14 @@ function collapseSidebar() {
     sidebar.classList.add('sidebar-collapsed');
     usersH2.classList.add('hidden');
     if(usersContainer) usersContainer.classList.add('collapsed');
-    mainContainer.style.marginLeft = '70px';
-    
+    if(window.innerWidth < 600)
+    {
+        mainContainer.style.marginLeft = '0';
+        mainContainer.style.paddingLeft = '70px';
+    }else{
+        mainContainer.style.marginLeft = '70px';
+        mainContainer.style.paddingLeft = 'unset';
+    }
 }
 
 function expandSidebar() {
@@ -22,7 +28,11 @@ function expandSidebar() {
     sidebar.classList.add('sidebar-expanded');
     usersH2.classList.remove('hidden');
     if(usersContainer) usersContainer.classList.remove('collapsed');
-    mainContainer.style.marginLeft = '20%';
+    if(window.innerWidth >= 600)
+    {
+        mainContainer.style.marginLeft = '20%';
+        mainContainer.style.paddingLeft = 'unset';
+    }
 }
 
 function toggleSidebar() {
